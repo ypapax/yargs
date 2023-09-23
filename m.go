@@ -3,16 +3,19 @@ package yargs
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
-func FirstArgFileContent() (string, error) {
+func FirstArgFileContent() (fileName, baseName string, content []byte, err error) {
 	if len(os.Args) < 2 {
-		return "", fmt.Errorf("missing first arg - file name")
+		return "", "", nil, fmt.Errorf("missing first arg - file name")
 	}
-	fileName := os.Args[1]
+	fileName = os.Args[1]
+	base := filepath.Base(fileName)
 	b, err := os.ReadFile(fileName)
 	if err != nil {
-		return "", fmt.Errorf("couldn' read file '%+v'", fileName)
+		return fileName, base, nil, fmt.Errorf("couldn' read file '%+v'", fileName)
 	}
-	return string(b), nil
+
+	return fileName, base, b, nil
 }
